@@ -4,32 +4,29 @@ using namespace std;
 
 
 // } Driver Code Ends
+
 class Solution {
   public:
     // Function to return max value that can be put in knapsack of capacity.
-    int solve(int index, int cap, vector<int>& val,
-    vector<int>&wt, vector<vector<int>>& dp){
-        if(index < 0) return 0;
-        
-        if(dp[index][cap] != -1){
-            return dp[index][cap];
-        }
-        
-        if(wt[index] > cap)
-            dp[index][cap] = solve(index-1,cap,val,wt,dp);
-        else
-            dp[index][cap] = max(solve(index-1,cap,val,wt,dp),
-            val[index] + solve(index-1,cap-wt[index],val,wt,dp));
-        
-        return dp[index][cap];
-    }
     int knapSack(int capacity, vector<int> &val, vector<int> &wt) {
-        int n = wt.size();
-        vector<vector<int>> dp(n,vector<int>(capacity+1,-1));
-        return solve(n-1,capacity, val, wt, dp);
+        int n = val.size();
+        vector<vector<int>> dp(n+1,vector<int>(capacity+1,0));
         
+        
+        for(int i = 1;i<=n;i++){
+            for(int w = 0;w<=capacity;w++)
+            {
+                if(wt[i-1] <= w){
+                    dp[i][w] = max(dp[i-1][w],val[i-1]+dp[i-1][w-wt[i-1]]);
+                }else{
+                    dp[i][w] = dp[i-1][w];
+                }
+            }
+        }
+        return dp[n][capacity];
     }
 };
+
 
 //{ Driver Code Starts.
 
