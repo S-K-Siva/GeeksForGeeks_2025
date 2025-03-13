@@ -7,15 +7,27 @@ using namespace std;
 
 class Solution {
   public:
-    // Function to return max value that can be put in knapsack of capacity.
-    int knapSack(int capacity, vector<int> &val, vector<int> &wt) {
+  
+    int solve(int W, vector<int> &val, vector<int> &wt,
+    int index){
+        if(index < 0 || W == 0) return 0;
+        
+        if(wt[index] > W){
+            return solve(W,val,wt,index-1);
+        }
+        int take = val[index] + solve(W-wt[index],val,wt,index-1);
+        int notTake = solve(W,val,wt,index-1);
+        return max(take,notTake);
+    }
+    int knapsack(int W, vector<int> &val, vector<int> &wt) {
+        // int index = wt.size()-1;
+        // return solve(W,val,wt,index);
         int n = val.size();
+        int capacity = W;
         vector<vector<int>> dp(n+1,vector<int>(capacity+1,0));
         
-        
         for(int i = 1;i<=n;i++){
-            for(int w = 0;w<=capacity;w++)
-            {
+            for(int w = 0;w<=capacity;w++){
                 if(wt[i-1] <= w){
                     dp[i][w] = max(dp[i-1][w],val[i-1]+dp[i-1][w-wt[i-1]]);
                 }else{
@@ -23,6 +35,7 @@ class Solution {
                 }
             }
         }
+        
         return dp[n][capacity];
     }
 };
@@ -65,7 +78,7 @@ int main() {
         }
 
         Solution solution;
-        cout << solution.knapSack(capacity, values, weights) << endl;
+        cout << solution.knapsack(capacity, values, weights) << endl;
         cout << "~" << endl;
     }
     return 0;
