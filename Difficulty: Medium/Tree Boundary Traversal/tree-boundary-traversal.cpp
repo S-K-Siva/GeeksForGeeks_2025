@@ -88,6 +88,7 @@ Node* buildTree(string str) {
 
 
 // } Driver Code Ends
+
 /*
 // Tree Node
 class Node {
@@ -107,61 +108,56 @@ class Node {
 
 class Solution {
   public:
-  
-    void collectLeftViewWithoutLeaf(Node *node, vector<int>& arr){
-        Node *root = node;
-        while(root){
-            if(root->left != nullptr || root->right != nullptr)
-                arr.push_back(root->data);
-            if(root->left)
-                root = root->left;
-            else
-                root = root->right;
-        }
-        
-    }
-    
-    void collectRightViewWithoutLeaf(Node *node, vector<int>& arr){
-        Node *root = node;
-        while(root){
-            if(root->left != nullptr || root->right != nullptr){
-                arr.push_back(root->data);
+    void leftViewHandle(Node *root, vector<int>& res){
+        Node *current = root;
+        while(current != nullptr){
+            if(current->left != nullptr || current->right != nullptr)
+                res.push_back(current->data);
+            if(current->left){
+                current = current->left;
+            }else{
+                current = current->right;
             }
-            if(root->right)
-                root = root->right;
-            else
-                root = root->left;
         }
-    }
-    
-    void inorder(Node *node, vector<int>& arr){
-        if(!node) return;
         
-        inorder(node->left,arr);
-        if(node->left == nullptr && node->right == nullptr){
-            arr.push_back(node->data);
-        }
-        inorder(node->right,arr);
     }
-    
+    void rightViewHandle(Node *root, vector<int>& res)
+    {
+        Node *current = root;
+        while(current != nullptr){
+            if(current->left != nullptr || current->right != nullptr){
+                res.push_back(current->data);
+            }
+            if(current->right) current = current->right;
+            else current = current->left;
+        }
+    }
+    void inorderTraversal(Node *root, vector<int>& res){
+        if(!root) return;
+        inorderTraversal(root->left, res);
+        if(root->left == nullptr && root->right == nullptr)
+            res.push_back(root->data);
+        inorderTraversal(root->right,res);
+    }
     vector<int> boundaryTraversal(Node *root) {
         if(!root) return {};
-        if(root->left == nullptr && root->right == nullptr){
-            return {root->data};
-        }
-        vector<int> left,right,leaf,result;
-        collectLeftViewWithoutLeaf(root->left,left);
-        collectRightViewWithoutLeaf(root->right,right);
-        inorder(root,leaf);
+        vector<int> result;
         result.push_back(root->data);
-        result.insert(result.end(),left.begin(),left.end());
-        result.insert(result.end(),leaf.begin(),leaf.end());
-        reverse(right.begin(),right.end());
-        result.insert(result.end(),right.begin(),right.end());
-        
+        if(root->left == nullptr && root->right == nullptr){
+            return result;
+        }
+        vector<int> leftView,rightView,bottomView;
+        leftViewHandle(root->left, leftView);
+        rightViewHandle(root->right, rightView);
+        inorderTraversal(root, bottomView);
+        reverse(rightView.begin(),rightView.end());
+        result.insert(result.end(),leftView.begin(),leftView.end());
+        result.insert(result.end(), bottomView.begin(),bottomView.end());
+        result.insert(result.end(), rightView.begin(), rightView.end());
         return result;
     }
 };
+
 
 //{ Driver Code Starts.
 
