@@ -25,6 +25,7 @@ Node* newNode(int val) {
 
 
 // } Driver Code Ends
+
 /* A binary tree Node
 class Node {
   public:
@@ -45,29 +46,29 @@ class Solution {
   public:
     vector<vector<int>> levelOrder(Node *root) {
         vector<vector<int>> result;
-        
-        Node *temp = root;
         queue<Node*> que;
         que.push(root);
         
+        
         while(!que.empty()){
             vector<int> row;
-            int size = que.size();
-            for(int i = 0;i<size;i++){
+            queue<Node*> temp;
+            while(!que.empty()){
                 Node *current = que.front();
                 que.pop();
-                if(current == nullptr) continue;
+                if(!current) continue;
                 row.push_back(current->data);
-                if(current->left) que.push(current->left);
-                if(current->right) que.push(current->right);
+                if(current->left) temp.push(current->left);
+                if(current->right) temp.push(current->right);
+                
             }
             result.push_back(row);
+            que = temp;
         }
-        
-        
         return result;
     }
 };
+
 
 //{ Driver Code Starts.
 
