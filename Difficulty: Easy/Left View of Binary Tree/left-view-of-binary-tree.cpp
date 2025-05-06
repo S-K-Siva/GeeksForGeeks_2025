@@ -30,24 +30,29 @@ struct Node
 class Solution {
   public:
     vector<int> leftView(Node *root) {
-        if (!root) return {};
-
+        if(!root) return {};
         queue<Node*> que;
         que.push(root);
         vector<int> result;
-    
-        while (!que.empty()) {
-            int size = que.size();
-            
-            for (int i = 0; i < size; i++) {
-                Node* current = que.front();
+        
+        while(!que.empty()){
+            result.push_back(que.front()->data);
+            queue<Node*> temp;
+         
+            while(!que.empty()){
+                Node *curr = que.front();
                 que.pop();
-    
-                if (i == 0) result.push_back(current->data);
-    
-                if (current->left) que.push(current->left);
-                if (current->right) que.push(current->right);
+                if(!curr) continue;
+                if(curr->left){
+                    
+                    temp.push(curr->left);
+                }
+                if(curr->right){
+                    
+                    temp.push(curr->right);
+                }
             }
+            que = temp;
         }
         return result;
     }
